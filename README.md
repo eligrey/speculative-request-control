@@ -64,9 +64,6 @@ Defining the `no-speculate` attribute on any element in a document causes specul
 
 ## Considered alternatives
 
-[This should include as many alternatives as you can,
-from high level architectural decisions down to alternative naming choices.]
-
 ### ServiceWorker CSP injection
 
 It is potentially possible to automatically inject CSP headers onto appropriately-scoped requests handled by ServiceWorkers. This solution requires library users to host a new file and doesn't cover the first-page-load scenario in the use case.
@@ -77,4 +74,4 @@ It is potentially possible to automatically inject CSP headers onto appropriatel
 - Firefox : No public signal
 - Edge : No public signal
 - Brave : No public signal
-- Chrome : Positive
+- Chrome : No public signal
