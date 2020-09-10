@@ -56,7 +56,7 @@ Defining the `no-speculate` attribute on any element in a document causes specul
     </script>
   </head>
   <body>
-    This should be blocked: [<img src="//unconsented-host.example">]
+    This should be blocked: [<img src="//unconsented-host.example"/>]
   </body>
 </html>
    
