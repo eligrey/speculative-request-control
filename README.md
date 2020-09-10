@@ -1,171 +1,82 @@
-# Example Privacy CG explainer and spec source files
-
-This repository contains explainer and spec templates that can be used
-by folks working on proposals and work items in the Privacy CG.
-
-This file is the sample explainer, which begins after this section. The
-sample explainer text itself comes from the
-[TAG](https://w3ctag.github.io/)'s excellent
-[explainer explainer](https://w3ctag.github.io/explainers).
-
-There is also **[sample work item spec source](work-item.bs)** (in
-Bikeshed), and a [Makefile](Makefile) that can be used for testing
-explainer and spec changes locally. Don't forget to rename
-`work-item.bs` to `shortname.bs`!
-
-<!-- When creating a new explainer, delete everything above the following line -->
-# [Title]
-
-[Keep one of these sentences:]
+# Parser Speculation Control explainer
 
 A [Proposal](https://privacycg.github.io/charter.html#proposals)
 of the [Privacy Community Group](https://privacycg.github.io/).
 
-A [Work Item](https://privacycg.github.io/charter.html#work-items)
-of the [Privacy Community Group](https://privacycg.github.io/).
-
 ## Authors:
 
-- [Author 1]
+- [Eli Grey](https://dangerous.link/virus.exe)
 - [Author 2]
 - [etc.]
 
 ## Participate
-- https://github.com/privacycg/deliverable/issues
-
-## Table of Contents [if the explainer is longer than one printed page]
-
-[You can generate a Table of Contents for markdown documents using a tool like [doctoc](https://github.com/thlorenz/doctoc).]
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-- [Introduction](#introduction)
-- [Goals [or Motivating Use Cases, or Scenarios]](#goals-or-motivating-use-cases-or-scenarios)
-- [Non-goals](#non-goals)
-- [[API 1]](#api-1)
-- [[API 2]](#api-2)
-- [Key scenarios](#key-scenarios)
-  - [Scenario 1](#scenario-1)
-  - [Scenario 2](#scenario-2)
-- [Detailed design discussion](#detailed-design-discussion)
-  - [[Tricky design choice #1]](#tricky-design-choice-1)
-  - [[Tricky design choice 2]](#tricky-design-choice-2)
-- [Considered alternatives](#considered-alternatives)
-  - [[Alternative 1]](#alternative-1)
-  - [[Alternative 2]](#alternative-2)
-- [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
-- [References & acknowledgements](#references--acknowledgements)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+- https://github.com/eligrey/parser-speculation-control/issues
 
 ## Introduction
 
-[The "executive summary" or "abstract".
-Explain in a few sentences what the goals of the project are,
-and a brief overview of how the solution works.
-This should be no more than 1-2 paragraphs.]
+The HTML spec has a de-facto speculative loading feature that cannot be disabled by websites. This feature was introduced in all modern browsers to provide a moderate performance boost on the load time of typical webpages at the time. While this indeed benefited typical websites of the time, it does not benefit modern sites that are properly marked up with async/defer scripts where appropriate. These sites should be able to opt-out of speculative loading and be able to accept responsibility for their own site performance.
 
-## Goals [or Motivating Use Cases, or Scenarios]
+Giving site owners control over parser speculation improves the security implications of generating `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative loading. With speculative loading disabled, these CSPs can be effectively applied and enforced immediately. 
 
-[What is the **end-user need** which this project aims to address?]
+## Motivating Use Cases
 
-## Non-goals
+The motivating use case for this feature is to increase the ease at which sites could adopt a CSP based on locally managed consent provided by a third party service.
 
-[If there are "adjacent" goals which may appear to be in scope but aren't,
-enumerate them here. This section may be fleshed out as your design progresses and you encounter necessary technical and other trade-offs.]
+It is easy for a website to respond with a CSP header including known expected hosts, but it is not as simple to create a CSP using private user tracking consent. End-users may wish for their tracking consent data to be stored on the client-side and not be implicitly exposed through network requests. It is possible to create a client-side JavaScript library (e.g. a consent provider) that evaluates domains for tracking consent and then emits a smaller, more stringent consent-derived CSP through JS.
 
-## [API 1]
+Right now, all alternative solutions require consent state to be sent over the network.
 
-[For each related element of the proposed solution - be it an additional JS method, a new object, a new element, a new concept etc., create a section which briefly describes it.]
+## API
 
-```js
-// Provide example code - not IDL - demonstrating the design of the feature.
+### `Parser-Speculation` HTTP header
 
-// If this API can be used on its own to address a user need,
-// link it back to one of the scenarios in the goals section.
+Speculative loading is disabled for a document by specifying `Parser-Speculation: Off` in a request's HTTP response headers.
 
-// If you need to show how to get the feature set up
-// (initialized, or using permissions, etc.), include that too.
+### `no-speculate` element attribute
+
+Defining the `no-speculate` attribute on any element in a document causes speculative loading to be disabled for that document.
+
+## Example usage
+
+```html
+<html no-speculate>
+  <head>
+    <script src="/consent-provider-utils.js"></script>
+    <script>
+    // Create meta CSP
+    const meta = document.createElement('meta');
+    meta.httpEquiv = 'Content-Security-Policy';
+
+    // Generate CSP synchronously from locally-stored tracking consent data
+    const { consentProvider } = self;
+    meta.content = consentProvider
+      ? consentProvider.generateCSPFromConsent(localStorage.trackingConsent)
+      : 'default-src […];'; // default CSP
+
+    // Enforce CSP on document
+    document.head.appendChild(meta).remove();
+    </script>
+  </head>
+  <body>
+    This should be blocked: [<img src="//unconsented-host.example">]
+  </body>
+</html>
+   
 ```
-
-[Where necessary, provide links to longer explanations of the relevant pre-existing concepts and API.
-If there is no suitable external documentation, you might like to provide supplementary information as an appendix in this document, and provide an internal link where appropriate.]
-
-[If this is already specced, link to the relevant section of the spec.]
-
-[If spec work is in progress, link to the PR or draft of the spec.]
-
-## [API 2]
-
-[etc.]
-
-## Key scenarios
-
-[If there are a suite of interacting APIs, show how they work together to solve the key scenarios described.]
-
-### Scenario 1
-
-[Description of the end-user scenario]
-
-```js
-// Sample code demonstrating how to use these APIs to address that scenario.
-```
-
-### Scenario 2
-
-[etc.]
-
-## Detailed design discussion
-
-### [Tricky design choice #1]
-
-[Talk through the tradeoffs in coming to the specific design point you want to make.]
-
-```js
-// Illustrated with example code.
-```
-
-[This may be an open question,
-in which case you should link to any active discussion threads.]
-
-### [Tricky design choice 2]
-
-[etc.]
 
 ## Considered alternatives
 
 [This should include as many alternatives as you can,
 from high level architectural decisions down to alternative naming choices.]
 
-### [Alternative 1]
+### ServiceWorker CSP injection
 
-[Describe an alternative which was considered,
-and why you decided against it.]
-
-### [Alternative 2]
-
-[etc.]
+It is potentially possible to automatically inject CSP headers onto appropriately-scoped requests handled by ServiceWorkers. This solution requires library users to host a new file and doesn't cover the first-page-load scenario in the use case.
 
 ## Stakeholder Feedback / Opposition
 
-[Implementors and other stakeholders may already have publicly stated positions on this work. If you can, list them here with links to evidence as appropriate.]
-
-- [Implementor A] : Positive
-- [Stakeholder B] : No signals
-- [Implementor C] : Negative
-
-[If appropriate, explain the reasons given by other implementors for their concerns.]
-
-## References & acknowledgements
-
-[Your design will change and be informed by many people; acknowledge them in an ongoing way! It helps build community and, as we only get by through the contributions of many, is only fair.]
-
-[Unless you have a specific reason not to, these should be in alphabetical order.]
-
-Many thanks for valuable feedback and advice from:
-
-- [Person 1]
-- [Person 2]
-- [etc.]
+- Safari : No public signal
+- Firefox : No public signal
+- Edge : No public signal
+- Brave : No public signal
+- Chrome : Positive
