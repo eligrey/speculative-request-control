@@ -6,8 +6,6 @@ of the [Privacy Community Group](https://privacycg.github.io/).
 ## Authors:
 
 - [Eli Grey](https://dangerous.link/virus.exe)
-- [Author 2]
-- [etc.]
 
 ## Participate
 - https://github.com/eligrey/parser-speculation-control/issues
