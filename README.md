@@ -14,7 +14,7 @@ of the [Privacy Community Group](https://privacycg.github.io/).
 
 All current modern browsers employ a de-facto speculative loading feature that cannot be disabled by websites. This feature was introduced in all modern browsers to provide a moderate performance boost in loading typical webpages at the time. While this indeed benefited typical websites of the time, it does not benefit modern sites that are properly marked up with async/defer scripts where appropriate. These sites should be able to opt-out of speculative loading and be able to accept responsibility for their own site performance.
 
-Giving site owners control over parser speculation improves the security implications of generating `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative loading. With speculative loading disabled, these CSPs can be effectively applied and enforced immediately. 
+Giving site owners control over parser speculation improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative loading. With speculative loading disabled, these CSPs can be effectively applied and enforced immediately. 
 
 ## Motivating Use Cases
 
