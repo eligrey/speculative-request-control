@@ -1,4 +1,4 @@
-# Parser Speculation Control explainer
+# Speculative Request Control explainer
 
 A [Proposal](https://privacycg.github.io/charter.html#proposals)
 of the [Privacy Community Group](https://privacycg.github.io/).
@@ -12,9 +12,9 @@ of the [Privacy Community Group](https://privacycg.github.io/).
 
 ## Introduction
 
-All current modern browsers employ a de-facto speculative loading feature that cannot be disabled by websites. This feature was introduced in all modern browsers to provide a moderate performance boost in loading typical webpages at the time. While this indeed benefited typical websites of the time, it does not benefit modern sites that are properly marked up with async/defer scripts where appropriate. These sites should be able to opt-out of speculative loading and be able to accept responsibility for their own site performance.
+All current modern browsers employ a de-facto speculative loading feature that cannot be disabled by websites. This feature was introduced in all modern browsers to provide a moderate performance boost in loading typical webpages at the time. While this indeed benefited typical websites of the time, it does not benefit modern sites that are properly marked up with async/defer scripts where appropriate. These sites should be able to opt-out of speculative requests and be able to accept responsibility for their own site performance.
 
-Giving site owners control over parser speculation improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative loading. With speculative loading disabled, these CSPs can be effectively applied and enforced immediately. 
+Giving site owners control over parser speculation improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative requests. With speculative requests disabled, these CSPs can be effectively applied and enforced immediately. 
 
 ## Motivating Use Cases
 
@@ -26,13 +26,13 @@ Right now, most alternative solutions require consent state to be sent over the 
 
 ## API
 
-### `Parser-Speculation` HTTP header
+### `Request-Speculation` HTTP header
 
-Speculative loading is disabled for a document by specifying `Parser-Speculation: Off` in a request's HTTP response headers.
+Speculative requests are disabled for a document whenever `Request-Speculation: Off` is specified in a request's HTTP response headers.
 
-### `no-speculate` element attribute
+### `document.requestSpeculation` accessor
 
-Defining the `no-speculate` attribute on any element in a document causes speculative loading to be disabled for that document.
+`document.requestSpeculation` reflects the document's current request speculation setting as a boolean value. This can be set to `true` or `false` to enable or disable speculative requests for that document.
 
 ## Example usage
 
