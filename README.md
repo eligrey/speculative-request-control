@@ -18,7 +18,7 @@ Giving site owners control over parser speculation improves the security implica
 
 ## Motivating Use Cases
 
-The motivating use case for this feature is to increase the ease at which sites could adopt a CSP based on locally managed consent provided by a third party service.
+The motivating use case for this feature is to increase the ease at which sites could adopt a CSP based on locally-stored consent provided by a third party JS library. In this use case, we can assume that the library vendor and site owner have taken the time explicitly preload resources asynchronously where appropriate, as they must knowingly disable speculative requests.
 
 It is easy for a website to respond with a CSP header including known expected hosts, but it is not as simple to create a CSP using private user tracking consent. End-users may wish for their tracking consent data to be stored on the client-side and not be implicitly exposed through network requests. It is possible to create a client-side JavaScript library (e.g. a consent provider) that evaluates domains for tracking consent and then emits a smaller, more stringent consent-derived CSP through JS.
 
