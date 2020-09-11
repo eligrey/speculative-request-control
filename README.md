@@ -30,6 +30,10 @@ Right now, most alternative solutions require consent state to be sent over the 
 
 Speculative requests are disabled for a document whenever `Request-Speculation: Off` is specified in a request's HTTP response headers.
 
+### `request-speculation` attribute on document element
+
+If there is a root document element with a `request-speculation` attribute and the attribute has a value that case-insensitively equals `on` or `off`, then speculative requests are enabled or disabled on that document.
+
 ### `document.requestSpeculation` accessor
 
 `document.requestSpeculation` reflects the document's current request speculation setting as a boolean value. This can be set to `true` or `false` to enable or disable speculative requests for that document.
@@ -37,7 +41,7 @@ Speculative requests are disabled for a document whenever `Request-Speculation: 
 ## Example usage
 
 ```html
-<html no-speculate>
+<html request-speculation="off">
   <head>
     <script src="/consent-provider-utils.js"></script>
     <script>
