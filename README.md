@@ -16,7 +16,7 @@ All current modern browsers employ a de-facto speculative loading feature that c
 
 Websites should be able to opt-out of eager speculative requests and be able to accept responsibility for their own site performance.
 
-Giving site owners control over speculative requests improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative requests. With speculative requests disabled, these CSPs can be effectively applied and enforced immediately.
+Giving site owners control over eager speculative requests improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to eager speculative requests. With eager speculative requests disabled, these CSPs can be effectively applied and enforced immediately.
 
 ### What is an eager speculative request?
 
@@ -24,7 +24,7 @@ An eager speculative request is a speculative request is sent before preceding s
 
 ## Motivating Use Cases
 
-The motivating use case for this feature is to increase the ease at which sites could adopt a CSP based on locally-stored consent provided by a third party JS library. In this use case, we can assume that the library vendor and site owner have taken the time explicitly preload resources asynchronously where appropriate, as they must knowingly disable speculative requests.
+The motivating use case for this feature is to increase the ease at which sites could adopt a CSP based on locally-stored consent provided by a third party JS library. In this use case, we can assume that the library vendor and site owner have taken the time explicitly preload resources asynchronously where appropriate, as they must knowingly disable eager speculative requests.
 
 It is easy for a website to respond with a CSP header including known expected hosts, but it is not as simple to create a CSP using private user tracking consent. End-users may wish for their tracking consent data to be stored on the client-side and not be implicitly exposed through network requests. It is possible to create a client-side JavaScript library (e.g. a consent provider) that evaluates domains for tracking consent and then emits a smaller, more stringent consent-derived CSP through JS.
 
