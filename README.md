@@ -71,7 +71,6 @@ If there is a root document element with a `eager-request-speculation` attribute
     This should be blocked: [<img src="//unconsented-host.example"/>]
   </body>
 </html>
-   
 ```
 
 ## Considered alternatives
