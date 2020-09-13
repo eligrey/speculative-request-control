@@ -20,7 +20,7 @@ Giving site owners control over speculative requests improves the security impli
 
 ### What is an eager speculative request?
 
-An eager speculative request is a speculative request that precedes an explicitly synchronous script. 
+An eager speculative request is a speculative request is sent before prior synchronous scripts finish executing.
 
 ## Motivating Use Cases
 
