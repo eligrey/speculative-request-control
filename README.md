@@ -12,9 +12,15 @@ of the [Privacy Community Group](https://privacycg.github.io/).
 
 ## Introduction
 
-All current modern browsers employ a de-facto speculative loading feature that cannot be disabled by websites. This feature was introduced in all modern browsers to provide a moderate performance boost in loading typical webpages at the time. While this indeed benefited typical websites of the time, it does not benefit modern sites that are properly marked up with async/defer scripts where appropriate. These sites should be able to opt-out of speculative requests and be able to accept responsibility for their own site performance.
+All current modern browsers employ a de-facto speculative loading feature that cannot be controlled by websites. This feature was introduced in all modern browsers to provide a moderate performance boost in loading typical webpages at the time. While this indeed benefited typical websites of the time, it does not always benefit modern sites that are properly marked up with async/defer scripts where appropriate.
 
-Giving site owners control over parser speculation improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative requests. With speculative requests disabled, these CSPs can be effectively applied and enforced immediately. 
+Websites should be able to opt-out of eager speculative requests and be able to accept responsibility for their own site performance.
+
+Giving site owners control over speculative requests improves the security implications of generating dynamic `<meta>` CSPs at runtime based on private locally-stored tracking consent data. Currently, client-side-generated `<meta>` CSPs are effectively unenforced until `DOMContentLoaded` due to speculative requests. With speculative requests disabled, these CSPs can be effectively applied and enforced immediately.
+
+### What is an eager speculative request?
+
+An eager speculative request is a speculative request that precedes an explicitly synchronous script. 
 
 ## Motivating Use Cases
 
@@ -26,22 +32,24 @@ Right now, most alternative solutions require consent state to be sent over the 
 
 ## API
 
+With lazy request speculation, speculative requests must wait for preceding synchronous scripts to finish execution before being sent out. Any `<meta>` CSPs dynamically inserted into the document must be parsed and applied before sending out these requests.
+
 ### `Request-Speculation` HTTP header
 
-Speculative requests are disabled for a document whenever `Request-Speculation: Off` is specified in a request's HTTP response headers.
+Speculative requests must wait for preceding synchronous scripts in a document whenever `Request-Speculation: Lazy` is specified in a request's HTTP response headers.
 
 ### `request-speculation` attribute on document element
 
-If there is a root document element with a `request-speculation` attribute and the attribute has a value that case-insensitively equals `on` or `off`, then speculative requests are enabled or disabled on that document.
+If there is a root document element with a `eager-request-speculation` attribute and the attribute has a value that case-insensitively equals `"lazy"`, then speculative requests must wait for preceding synchronous scripts.
 
-### `document.requestSpeculation` accessor
+### Read-only `Document.prototype.requestSpeculation` getter
 
-`document.requestSpeculation` reflects the document's current request speculation setting as a boolean value. This can be set to `true` or `false` to enable or disable speculative requests for that document.
+`document.requestSpeculation` reflects the document's current request speculation setting as either `'eager'` or `'lazy'`. This is a read-only getter.
 
 ## Example usage
 
 ```html
-<html request-speculation="off">
+<html request-speculation="lazy">
   <head>
     <script src="/consent-provider-utils.js"></script>
     <script>
