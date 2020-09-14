@@ -8,7 +8,7 @@ of the [Privacy Community Group](https://privacycg.github.io/).
 - [Eli Grey](https://dangerous.link/virus.exe)
 
 ## Participate
-- https://github.com/eligrey/parser-speculation-control/issues
+- https://github.com/eligrey/speculative-request-control/issues
 
 ## Introduction
 
