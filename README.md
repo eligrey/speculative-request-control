@@ -53,7 +53,8 @@ If there is a root document element with a `eager-request-speculation` attribute
   <head>
     <script src="/consent-provider-utils.js"></script>
     <script>
-    if (!document.requestSpeculation !== 'lazy') {
+    // Warn to console if lazy speculative requests are not supported
+    if (!document.requestSpeculation || document.requestSpeculation === 'eager') {
       console.warn('Eager speculative requests are enabled. Dynamic CSPs are not active until DOMContentLoaded');
     }
       
