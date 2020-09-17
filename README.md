@@ -53,6 +53,10 @@ If there is a root document element with a `eager-request-speculation` attribute
   <head>
     <script src="/consent-provider-utils.js"></script>
     <script>
+    if (!document.requestSpeculation !== 'lazy') {
+      console.warn('Eager speculative requests are enabled. Dynamic CSPs are not active until DOMContentLoaded');
+    }
+      
     // Create meta CSP
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Security-Policy';
