@@ -40,7 +40,7 @@ Speculative requests must wait for preceding synchronous scripts in a document w
 
 ### `request-speculation` attribute on document element
 
-If there is a root document element with a `eager-request-speculation` attribute and the attribute has a value that case-insensitively equals `lazy`, then speculative requests must wait for preceding synchronous scripts.
+If there is a root document element with a `request-speculation` attribute and the attribute has a value that case-insensitively equals `lazy`, then speculative requests must wait for preceding synchronous scripts.
 
 ### Read-only `Document.prototype.requestSpeculation` getter
 
